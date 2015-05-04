@@ -126,7 +126,7 @@ function sprintf() {
             if (category.id == selectedValue) {
               selected = "selected";
             }
-            
+
             jQuery("<option/>")
               .attr("value", category.id)
               .attr("selected", selected)
@@ -247,7 +247,7 @@ var uploadify_path = '{$uploadify_path}';
 var upload_id = '{$upload_id}';
 var session_id = '{$session_id}';
 var pwg_token = '{$pwg_token}';
-var buttonText = "{'Select files'|@translate}";
+var buttonText = "{'Select files'|translate}";
 var sizeLimit = Math.round({$upload_max_filesize} / 1024); /* in KBytes */
 var sumQueueFilesize = 0;
   {if isset($limit_storage)}
@@ -285,7 +285,7 @@ var limit_storage = {$limit_storage};
         if (sumQueueFilesize + file.size > limit_storage) {
           jQuery.jGrowl(
             '<p></p>'+sprintf(
-              '{/literal}{'File %s too big (%uMB), quota of %uMB exceeded'|@translate}{literal}',
+              '{/literal}{'File %s too big (%uMB), quota of %uMB exceeded'|translate}{literal}',
               file.name,
               Math.round(file.size/(1024*1024)),
               limit_storage/(1024*1024)
@@ -442,7 +442,7 @@ p#uploadModeInfos {text-align:left;margin-top:1em;font-size:90%;color:#999;}
 .showInfo {display:block;position:absolute;top:0;right:5px;width:15px;font-style:italic;font-family:"Georgia",serif;background-color:#464646;font-size:0.9em;border-radius:10px;-moz-border-radius:10px;}
 .showInfo:hover {cursor:pointer}
 .showInfo {color:#fff;background-color:#999; }
-.showInfo:hover {color:#fff;border:none;background-color:#333} 
+.showInfo:hover {color:#fff;border:none;background-color:#333}
 </style>
 {/literal}
 
@@ -465,14 +465,14 @@ p#uploadModeInfos {text-align:left;margin-top:1em;font-size:90%;color:#999;}
     <li>{$warning}</li>
     {/foreach}
   </ul>
-  <div class="hideButton" style="text-align:center"><a href="{$hide_warnings_link}">{'Hide'|@translate}</a></div>
+  <div class="hideButton" style="text-align:center"><a href="{$hide_warnings_link}">{'Hide'|translate}</a></div>
 </div>
   {/if}
 
 
 {if !empty($thumbnails)}
 <fieldset>
-  <legend>{'Uploaded Photos'|@translate}</legend>
+  <legend>{'Uploaded Photos'|translate}</legend>
   <div>
   {foreach from=$thumbnails item=thumbnail}
     <a href="{$thumbnail.link}"  class="{if isset($thumbnail.lightbox)}colorboxThumb{else}externalLink{/if}">
@@ -481,21 +481,21 @@ p#uploadModeInfos {text-align:left;margin-top:1em;font-size:90%;color:#999;}
   {/foreach}
   </div>
 </fieldset>
-<p style="margin:10px"><a href="{$another_upload_link}">{'Add another set of photos'|@translate}</a></p>
+<p style="margin:10px"><a href="{$another_upload_link}">{'Add another set of photos'|translate}</a></p>
 {else}
 
 <div id="formErrors" class="errors" style="display:none">
   <ul>
-    <li id="noAlbum">{'Select an album'|@translate}</li>
-    <li id="noPhoto">{'Select at least one photo'|@translate}</li>
+    <li id="noAlbum">{'Select an album'|translate}</li>
+    <li id="noPhoto">{'Select at least one photo'|translate}</li>
   </ul>
-  <div class="hideButton" style="text-align:center"><a href="#" id="hideErrors">{'Hide'|@translate}</a></div>
+  <div class="hideButton" style="text-align:center"><a href="#" id="hideErrors">{'Hide'|translate}</a></div>
 </div>
 
 <div style="display:none">
   <div id="addAlbumForm" style="text-align:left;padding:1em;">
     <form>
-      {'Parent album'|@translate}<br>
+      {'Parent album'|translate}<br>
       <select id ="category_parent" name="category_parent">
 {if $create_whole_gallery}
         <option value="0">------------</option>
@@ -503,8 +503,8 @@ p#uploadModeInfos {text-align:left;margin-top:1em;font-size:90%;color:#999;}
         {html_options options=$category_parent_options selected=$category_parent_options_selected}
       </select>
 
-      <br><br>{'Album name'|@translate}<br><input name="category_name" type="text"> <span id="categoryNameError"></span>
-      <br><br><br><input type="submit" value="{'Create'|@translate}"> <span id="albumCreationLoading" style="display:none"><img src="themes/default/images/ajax-loader-small.gif"></span>
+      <br><br>{'Album name'|translate}<br><input name="category_name" type="text"> <span id="categoryNameError"></span>
+      <br><br><br><input type="submit" value="{'Create'|translate}"> <span id="albumCreationLoading" style="display:none"><img src="themes/default/images/ajax-loader-small.gif"></span>
     </form>
   </div>
 </div>
@@ -515,7 +515,7 @@ p#uploadModeInfos {text-align:left;margin-top:1em;font-size:90%;color:#999;}
 {/if}
 
     <fieldset>
-      <legend>{'Drop into album'|@translate}</legend>
+      <legend>{'Drop into album'|translate}</legend>
 
       <span class="albumSelection"{if count($category_options) == 0} style="display:none"{/if}>
       <select id="albumSelect" name="category">
@@ -524,22 +524,22 @@ p#uploadModeInfos {text-align:left;margin-top:1em;font-size:90%;color:#999;}
       </span>
 {if $create_subcategories}
       <div id="linkToCreate">
-      <span class="albumSelection">{'... or '|@translate}</span><a href="#" class="addAlbumOpen" title="{'create a new album'|@translate}">{'create a new album'|@translate}</a>
+      <span class="albumSelection">{'... or '|translate}</span><a href="#" class="addAlbumOpen" title="{'create a new album'|translate}">{'create a new album'|translate}</a>
       </div>
-{/if}      
+{/if}
     </fieldset>
 
     <fieldset>
-      <legend>{'Select files'|@translate}</legend>
+      <legend>{'Select files'|translate}</legend>
 
     <p id="uploadWarningsSummary">{$upload_max_filesize_shorthand}B. {$upload_file_types}. {if isset($max_upload_resolution)}{$max_upload_resolution}Mpx.{/if} {if isset($quota_summary)}{$quota_summary}{/if}
-<a class="showInfo" title="{'Learn more'|@translate}">i</a></p>
+<a class="showInfo" title="{'Learn more'|translate}">i</a></p>
 
     <p id="uploadWarnings">
-{'Maximum file size: %sB.'|@translate|@sprintf:$upload_max_filesize_shorthand}
-{'Allowed file types: %s.'|@translate|@sprintf:$upload_file_types}
+{'Maximum file size: %sB.'|translate|@sprintf:$upload_max_filesize_shorthand}
+{'Allowed file types: %s.'|translate|@sprintf:$upload_file_types}
   {if isset($max_upload_resolution)}
-{'Approximate maximum resolution: %dM pixels (that\'s %dx%d pixels).'|@translate|@sprintf:$max_upload_resolution:$max_upload_width:$max_upload_height}
+{'Approximate maximum resolution: %dM pixels (that\'s %dx%d pixels).'|translate|@sprintf:$max_upload_resolution:$max_upload_width:$max_upload_height}
   {/if}
 {$quota_details}
     </p>
@@ -547,40 +547,40 @@ p#uploadModeInfos {text-align:left;margin-top:1em;font-size:90%;color:#999;}
 {if $upload_mode eq 'html'}
       <div id="uploadBoxes"></div>
       <div id="addUploadBox">
-        <a href="javascript:">{'+ Add an upload box'|@translate}</a>
+        <a href="javascript:">{'+ Add an upload box'|translate}</a>
       </div>
 
-    <p id="uploadModeInfos">{'You are using the Browser uploader. Try the <a href="%s">Flash uploader</a> instead.'|@translate|@sprintf:$switch_url}</p>
+    <p id="uploadModeInfos">{'You are using the Browser uploader. Try the <a href="%s">Flash uploader</a> instead.'|translate|@sprintf:$switch_url}</p>
 
 {elseif $upload_mode eq 'multiple'}
-    <div id="uploadify">You've got a problem with your JavaScript</div> 
+    <div id="uploadify">You've got a problem with your JavaScript</div>
 
     <div id="fileQueue" style="display:none"></div>
 
-    <p id="uploadModeInfos">{'You are using the Flash uploader. Problems? Try the <a href="%s">Browser uploader</a> instead.'|@translate|@sprintf:$switch_url}</p>
+    <p id="uploadModeInfos">{'You are using the Flash uploader. Problems? Try the <a href="%s">Browser uploader</a> instead.'|translate|@sprintf:$switch_url}</p>
 
 {/if}
     </fieldset>
 
-    <p class="showFieldset"><a id="showPhotoProperties" href="#">{'Set Photo Properties'|@translate}</a></p>
+    <p class="showFieldset"><a id="showPhotoProperties" href="#">{'Set Photo Properties'|translate}</a></p>
 
     <fieldset id="photoProperties" style="display:none">
-      <legend>{'Photo Properties'|@translate}</legend>
+      <legend>{'Photo Properties'|translate}</legend>
 
       <input type="checkbox" name="set_photo_properties" style="display:none">
 
       <p>
-        {'Title'|@translate}<br>
+        {'Title'|translate}<br>
         <input type="text" class="large" name="name" value="">
       </p>
 
       <p>
-        {'Author'|@translate}<br>
+        {'Author'|translate}<br>
         <input type="text" class="large" name="author" value="">
       </p>
 
       <p>
-        {'Description'|@translate}<br>
+        {'Description'|translate}<br>
         <textarea name="description" id="description" class="description" style="margin:0"></textarea>
       </p>
 
@@ -588,24 +588,24 @@ p#uploadModeInfos {text-align:left;margin-top:1em;font-size:90%;color:#999;}
 
 {if $upload_mode eq 'html'}
     <p>
-      <input class="submit" type="submit" name="submit_upload" value="{'Start Upload'|@translate}">
+      <input class="submit" type="submit" name="submit_upload" value="{'Start Upload'|translate}">
     </p>
 {elseif $upload_mode eq 'multiple'}
     <p style="margin-bottom:1em">
-      <input class="submit" type="button" value="{'Start Upload'|@translate}">
+      <input class="submit" type="button" value="{'Start Upload'|translate}">
       <input type="submit" name="submit_upload" style="display:none">
     </p>
 {/if}
 </form>
 
 <div id="uploadProgress" style="display:none">
-{'Photo %s of %s'|@translate|@sprintf:'<span id="progressCurrent">1</span>':'<span id="progressMax">10</span>'}
+{'Photo %s of %s'|translate|@sprintf:'<span id="progressCurrent">1</span>':'<span id="progressMax">10</span>'}
 <br>
 <div id="progressbar"></div>
 </div>
 
 <fieldset style="display:none">
-  <legend>{'Uploaded Photos'|@translate}</legend>
+  <legend>{'Uploaded Photos'|translate}</legend>
   <div id="uploadedPhotos"></div>
 </fieldset>
 

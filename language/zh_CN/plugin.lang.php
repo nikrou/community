@@ -1,14 +1,13 @@
 <?php
 // +-----------------------------------------------------------------------+
-// | Piwigo - a PHP based photo gallery                                    |
+// | Community - a plugin for Phyxo                                        |
+// | Copyright(C) 2015 Nicolas Roudaire             http://www.nikrou.net  |
 // +-----------------------------------------------------------------------+
-// | Copyright(C) 2008-2012 Piwigo Team                  http://piwigo.org |
-// | Copyright(C) 2003-2008 PhpWebGallery Team    http://phpwebgallery.net |
-// | Copyright(C) 2002-2003 Pierrick LE GALL   http://le-gall.net/pierrick |
+// | Copyright(C) 2008-2015 Piwigo Team                  http://piwigo.org |
 // +-----------------------------------------------------------------------+
 // | This program is free software; you can redistribute it and/or modify  |
-// | it under the terms of the GNU General Public License as published by  |
-// | the Free Software Foundation                                          |
+// | it under the terms of the GNU General Public License version 2 as     |
+// | published by the Free Software Foundation                             |
 // |                                                                       |
 // | This program is distributed in the hope that it will be useful, but   |
 // | WITHOUT ANY WARRANTY; without even the implied warranty of            |
@@ -17,9 +16,10 @@
 // |                                                                       |
 // | You should have received a copy of the GNU General Public License     |
 // | along with this program; if not, write to the Free Software           |
-// | Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, |
-// | USA.                                                                  |
+// | Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            |
+// | MA 02110-1301 USA.                                                    |
 // +-----------------------------------------------------------------------+
+
 $lang['%d photos rejected'] = '%d 张图片被拒绝';
 $lang['%d photos uploaded by %s'] = '%d 张图片被 %s 上传';
 $lang['%d photos uploaded into album "%s"'] = '%d 张图片已上传至相册 "%s"';
@@ -79,4 +79,3 @@ $lang['File %s too big (%uMB), quota of %uMB exceeded'] = '文件 %s 过大 (%uM
 $lang['Gallery root'] = '相册根目录';
 $lang['a user can own only one album'] = '一个用户只能拥有一个相册';
 $lang['Album of user'] = '用户相册';
-?>

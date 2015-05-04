@@ -1,14 +1,13 @@
 <?php
 // +-----------------------------------------------------------------------+
-// | Piwigo - a PHP based photo gallery                                    |
+// | Community - a plugin for Phyxo                                        |
+// | Copyright(C) 2015 Nicolas Roudaire             http://www.nikrou.net  |
 // +-----------------------------------------------------------------------+
-// | Copyright(C) 2008-2013 Piwigo Team                  http://piwigo.org |
-// | Copyright(C) 2003-2008 PhpWebGallery Team    http://phpwebgallery.net |
-// | Copyright(C) 2002-2003 Pierrick LE GALL   http://le-gall.net/pierrick |
+// | Copyright(C) 2008-2015 Piwigo Team                  http://piwigo.org |
 // +-----------------------------------------------------------------------+
 // | This program is free software; you can redistribute it and/or modify  |
-// | it under the terms of the GNU General Public License as published by  |
-// | the Free Software Foundation                                          |
+// | it under the terms of the GNU General Public License version 2 as     |
+// | published by the Free Software Foundation                             |
 // |                                                                       |
 // | This program is distributed in the hope that it will be useful, but   |
 // | WITHOUT ANY WARRANTY; without even the implied warranty of            |
@@ -17,9 +16,10 @@
 // |                                                                       |
 // | You should have received a copy of the GNU General Public License     |
 // | along with this program; if not, write to the Free Software           |
-// | Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, |
-// | USA.                                                                  |
+// | Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            |
+// | MA 02110-1301 USA.                                                    |
 // +-----------------------------------------------------------------------+
+
 $lang['high trust'] = '高度信任';
 $lang['web size'] = '網站大小';
 $lang['uploaded photos must be validated by an administrator'] = '上傳的照片必須由管理員進行驗證';
@@ -79,4 +79,3 @@ $lang['up to %d photos (for each user)'] = '最多 %d 張照片 (每位使用者
 $lang['up to %dMB (for each user)'] = '最多 %dMB (每位使用者)';
 $lang['Album of user'] = '用戶相冊';
 $lang['a user can own only one album'] = '一個用戶只能擁有一個相冊';
-?>
