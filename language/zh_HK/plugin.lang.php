@@ -46,7 +46,7 @@ $lang['Permission added'] = '已加權限';
 $lang['Permission removed'] = '權限已刪除';
 $lang['Permission updated'] = '權限已更新';
 $lang['Photo %s rejected.'] = '相片 %s 拒絕了。';
-$lang['Piwigo automatically creates an album for each user, on first connection'] = 'Piwigo自動為每個用戶在第一次連接表時,建立一個相簿
+$lang['Phyxo automatically creates an album for each user, on first connection'] = 'Phyxo自動為每個用戶在第一次連接表時,建立一個相簿
 ';
 $lang['Set Photo Properties'] = '設定相片屬性';
 $lang['The whole gallery'] = '整個圖片庫';
@@ -55,7 +55,7 @@ $lang['Upload your own photos'] = '上載自己的相片';
 $lang['User album only'] = '用戶相簿';
 $lang['User albums'] = '用戶相簿';
 $lang['Validation page: %s'] = '驗證網頁: %s';
-$lang['Where should Piwigo create user albums?'] = '應該在哪裡創建Piwigo使用者相簿？';
+$lang['Where should Phyxo create user albums?'] = '應該在哪裡創建Phyxo使用者相簿？';
 $lang['Where?'] = '在哪裡？';
 $lang['Which level of trust?'] = '哪個信任級別？';
 $lang['%d photos rejected'] = '%d張相片拒絕了';
