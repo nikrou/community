@@ -64,7 +64,7 @@ function community_get_user_permissions($user_id) {
         $query .= ' OR (type = \'user\' AND user_id = '.$conn->db_real_escape_string($user_id).')';
 
         if (count($user_group_ids) > 0) {
-            $query .= ' OR (type = \'group\' AND group_id '.$conn->in($user_group_ids).'))';
+            $query .= ' OR (type = \'group\' AND group_id '.$conn->in($user_group_ids).')';
         }
     }
 
@@ -127,7 +127,7 @@ function community_get_user_permissions($user_id) {
     // these are categories with access permission but considering the user
     // has a level 8 (maximum level). We want to keep categories with no
     // photos inside (for nobody)
-    $forbidden_categories = calculate_permissions($user['id'], $user['status']);
+    $forbidden_categories = $services['users']->calculatePermissions($user['id'], $user['status']);
 
     $empty_categories = array_diff(
         explode(',', $user['forbidden_categories']),

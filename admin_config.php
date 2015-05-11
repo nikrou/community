@@ -48,7 +48,7 @@ if (!empty($_POST)) {
         'user_albums_parent' => $_POST['user_albums_parent'],
     );
 
-    conf_update_param('community', serialize($conf['community']));
+    conf_update_param('community', $conf['community']);
 
     $page['infos'][] = l10n('Information data registered in database');
 }
@@ -93,10 +93,3 @@ $template->assign(
         'level_options_selected' => array($selected_level)
     )
 );
-
-
-// +-----------------------------------------------------------------------+
-// | sending html code                                                     |
-// +-----------------------------------------------------------------------+
-
-$template->assign_var_from_handle('ADMIN_CONTENT', 'plugin_admin_content');

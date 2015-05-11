@@ -24,7 +24,7 @@ if (!defined('PHPWG_ROOT_PATH')) {
     die('Hacking attempt!');
 }
 
-global $template, $conf, $user, $conn;
+global $template, $conf, $user, $conn, $services;
 
 include_once(PHPWG_ROOT_PATH.'admin/include/functions.php');
 include_once(PHPWG_ROOT_PATH.'admin/include/functions_upload.inc.php');
@@ -49,7 +49,7 @@ $page['infos'] = array();
 // with function community_uploadify_privacy_level (see main.inc.php)
 $_POST['level'] = 16;
 
-if (isset($_GET['processed'])) {
+if (isset($_GET['processed']) && !empty($_POST['category'])) {
     $hacking_attempt = false;
 
     // is the user authorized to upload in this album?
@@ -139,10 +139,11 @@ if (isset($image_ids) and count($image_ids) > 0) {
         $data['name'] = $_POST['name'];
         $data['author'] = $_POST['author'];
 
-        if ($conf['allow_html_descriptions']) {
-            $data['comment'] = @$_POST['description']; // @TODO: remove arobase
-        } else {
-            $data['comment'] = strip_tags(@$_POST['description']); // @TODO: remove arobase
+        if (!empty($_POST['description'])) {
+            $data['comment'] = $_POST['description'];
+        }
+        if (!$conf['allow_html_descriptions']) {
+            $data['comment'] = strip_tags($data['comment']);
         }
 
         $updates = array();
@@ -356,9 +357,13 @@ if (isset($_GET['upload_mode']) and $upload_mode != $_GET['upload_mode'] and in_
 }
 
 // what is the upload switch mode
+if (empty($upload_mode)) {
+    $upload_mode = 'multiple';
+    conf_update_param('upload_mode', $upload_mode, true);
+}
 $index_of_upload_mode = array_flip($upload_modes);
 $upload_mode_index = $index_of_upload_mode[$upload_mode];
-$upload_switch = $upload_modes[ ($upload_mode_index + 1) % 2 ];
+$upload_switch = $upload_modes[($upload_mode_index + 1) % 2];
 
 $template->assign(
     array(

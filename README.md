@@ -1,4 +1,4 @@
-community
+Community
 =========
 
 community plugin aims to allow non admin users to add photos.

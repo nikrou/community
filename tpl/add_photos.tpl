@@ -279,7 +279,6 @@ var limit_storage = {$limit_storage};
 {literal}
     requeueErrors   : false,
     'onSelect'       : function(file) {
-      console.log('filesize = '+file.size+'bytes');
 
       if (typeof limit_storage != 'undefined') {
         if (sumQueueFilesize + file.size > limit_storage) {
@@ -309,7 +308,6 @@ var limit_storage = {$limit_storage};
       jQuery("#fileQueue").show();
     },
     'onCancel' : function(file) {
-      console.log('The file ' + file.name + ' was cancelled ('+file.size+')');
     },
     'onQueueComplete'  : function(stats) {
       jQuery("input[name=submit_upload]").click();
@@ -380,7 +378,6 @@ var limit_storage = {$limit_storage};
         'pwg_token' : pwg_token,
       }
     );
-
     nb_files = jQuery(".uploadifyQueueItem").size();
     jQuery("#progressMax").text(nb_files);
     jQuery("#progressbar").progressbar({max: nb_files*2, value:1});
@@ -503,6 +500,9 @@ p#uploadModeInfos {text-align:left;margin-top:1em;font-size:90%;color:#999;}
         {html_options options=$category_parent_options selected=$category_parent_options_selected}
       </select>
 
+      <select id="level" name="level">
+	<option selected="selected" value="16"></option>
+      </select>
       <br><br>{'Album name'|translate}<br><input name="category_name" type="text"> <span id="categoryNameError"></span>
       <br><br><br><input type="submit" value="{'Create'|translate}"> <span id="albumCreationLoading" style="display:none"><img src="themes/default/images/ajax-loader-small.gif"></span>
     </form>

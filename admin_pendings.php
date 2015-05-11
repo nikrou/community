@@ -192,10 +192,3 @@ $template->assign(
         'level_options_selected' => array($selected_level)
     )
 );
-
-
-// +-----------------------------------------------------------------------+
-// | sending html code                                                     |
-// +-----------------------------------------------------------------------+
-
-$template->assign_var_from_handle('ADMIN_CONTENT', 'plugin_admin_content');

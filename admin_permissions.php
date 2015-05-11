@@ -90,9 +90,9 @@ if (isset($_POST['submit_add'])) {
         'user_id' => ('user' == $_POST['who']) ? $_POST['who_user'] : null,
         'category_id' => ($_POST['category'] > 0) ? $_POST['category'] : null,
         'user_album' => $conn->boolean_to_db(-1 == $_POST['category']),
-        'recursive' => isset($_POST['recursive']) ? 'true' : 'false',
-        'create_subcategories' => isset($_POST['create_subcategories']) ? 'true' : 'false',
-        'moderated' => $_POST['moderated'],
+        'recursive' => isset($_POST['recursive']) ? $conn->boolean_to_db(true):$conn->boolean_to_db(false),
+        'create_subcategories' => isset($_POST['create_subcategories']) ? $conn->boolean_to_db(true):$conn->boolean_to_db(false),
+        'moderated' => $conn->boolean_to_db($conn->get_boolean($_POST['moderated'])),
         'nb_photos' => $_POST['nb_photos'],
         'storage' => $_POST['storage'],
     );
@@ -231,7 +231,7 @@ $users = array();
 $query = 'SELECT '.$conf['user_fields']['id'].' AS id,'.$conf['user_fields']['username'].' AS username';
 $query .= ' FROM '.USERS_TABLE.' AS u';
 $query .= ' LEFT JOIN '.USER_INFOS_TABLE.' AS uf ON uf.user_id = u.'.$conf['user_fields']['id'];
-$query .= ' WHERE uf.status IN (\'normal\',\'generic\')';
+$query .= ' WHERE uf.status '.$conn->in(array('normal', 'generic'));
 $result = $conn->db_query($query);
 while ($row = $conn->db_fetch_assoc($result)) {
     $users[$row['id']] = $row['username'];
@@ -410,9 +410,3 @@ foreach ($permissions as $permission) {
         )
     );
 }
-
-// +-----------------------------------------------------------------------+
-// | sending html code                                                     |
-// +-----------------------------------------------------------------------+
-
-$template->assign_var_from_handle('ADMIN_CONTENT', 'plugin_admin_content');

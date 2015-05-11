@@ -92,3 +92,9 @@ $template->set_filenames(array('photos_add' => 'photos_add_'.$page['tab'].'.tpl'
 // +-----------------------------------------------------------------------+
 
 include(COMMUNITY_PATH.'admin_'.$page['tab'].'.php');
+
+// +-----------------------------------------------------------------------+
+// | sending html code                                                     |
+// +-----------------------------------------------------------------------+
+
+$template->assign_var_from_handle('ADMIN_CONTENT', 'plugin_admin_content');
