@@ -7,7 +7,7 @@ TARGET=../target
 config: clean
 	mkdir -p $(DIST)/$(PLUGIN_NAME)
 	cp -pr *.php include language sql tpl uploadify \
-	CHANGELOG.md COPYING README.md $(DIST)/$(PLUGIN_NAME)/
+	CHANGELOG.md LICENSE README.md $(DIST)/$(PLUGIN_NAME)/
 	find $(DIST) -name '*~' -exec rm \{\} \;
 
 dist: config

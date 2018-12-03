@@ -1,26 +1,18 @@
 <?php
-// +-----------------------------------------------------------------------+
-// | Community - a plugin for Phyxo                                        |
-// | Copyright(C) 2015 Nicolas Roudaire             http://www.nikrou.net  |
-// +-----------------------------------------------------------------------+
-// | This program is free software; you can redistribute it and/or modify  |
-// | it under the terms of the GNU General Public License version 2 as     |
-// | published by the Free Software Foundation                             |
-// |                                                                       |
-// | This program is distributed in the hope that it will be useful, but   |
-// | WITHOUT ANY WARRANTY; without even the implied warranty of            |
-// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      |
-// | General Public License for more details.                              |
-// |                                                                       |
-// | You should have received a copy of the GNU General Public License     |
-// | along with this program; if not, write to the Free Software           |
-// | Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            |
-// | MA 02110-1301 USA.                                                    |
-// +-----------------------------------------------------------------------+
+/*
+ * This file is part of Community, a plugin for Phyxo package
+ *
+ * Copyright(c) Nicolas Roudaire  https://www.phyxo.net/
+ * Licensed under the GPL version 2.0 license.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 class CommunityPublic
 {
-    public static function section_init() {
+    public static function section_init()
+    {
         global $tokens, $page;
 
         if ($tokens[0] == 'add_photos') {
@@ -28,15 +20,17 @@ class CommunityPublic
         }
     }
 
-    public static function index() {
+    public static function index()
+    {
         global $page;
 
         if (isset($page['section']) and $page['section'] == 'add_photos') {
-            include(COMMUNITY_PATH.'add_photos.php');
+            include(COMMUNITY_PATH . 'add_photos.php');
         }
     }
 
-    public static function gallery_menu($menu_ref_arr) {
+    public static function gallery_menu($menu_ref_arr)
+    {
         global $conf, $user;
 
         // conditional : depending on community permissions, display the "Add
@@ -47,9 +41,9 @@ class CommunityPublic
             return;
         }
 
-        $menu = & $menu_ref_arr[0];
+        $menu = &$menu_ref_arr[0];
 
-        if (($block = $menu->get_block('mbMenu')) != null ) {
+        if (($block = $menu->get_block('mbMenu')) != null) {
             load_language('plugin.lang', COMMUNITY_PATH);
 
             array_splice(
@@ -67,7 +61,8 @@ class CommunityPublic
         }
     }
 
-    public static function community_set_prefilter_cat_modify() {
+    public static function community_set_prefilter_cat_modify()
+    {
         global $template, $conf, $category, $conn;
 
         if (!isset($conf['community']['user_albums']) or !$conf['community']['user_albums']) {
@@ -76,11 +71,11 @@ class CommunityPublic
 
         $template->set_prefilter('album_properties', array(self, 'cat_modify_prefilter'));
 
-        $query = 'SELECT '.$conf['user_fields']['id'].' AS id,';
-        $query .= $conf['user_fields']['username'].' AS username';
-        $query .= ' FROM '.USERS_TABLE.' AS u';
-        $query .= ' LEFT JOIN '.USER_INFOS_TABLE.' AS uf ON uf.user_id = u.'.$conf['user_fields']['id'];
-        $query .= ' WHERE uf.status '.$conn->in(array('normal', 'generic'));
+        $query = 'SELECT ' . $conf['user_fields']['id'] . ' AS id,';
+        $query .= $conf['user_fields']['username'] . ' AS username';
+        $query .= ' FROM ' . USERS_TABLE . ' AS u';
+        $query .= ' LEFT JOIN ' . USER_INFOS_TABLE . ' AS uf ON uf.user_id = u.' . $conf['user_fields']['id'];
+        $query .= ' WHERE uf.status ' . $conn->in(array('normal', 'generic'));
         $result = $conn->db_query($query);
         $users = array();
         while ($row = $conn->db_fetch_assoc($result)) {
@@ -95,7 +90,8 @@ class CommunityPublic
         );
     }
 
-    private static function cat_modify_prefilter($content, &$smarty) {
+    private static function cat_modify_prefilter($content, &$smarty)
+    {
         $search = "#<strong>{'Name'#";
 
         // We use the <tr> from the Creation date, and give them a new <tr>
@@ -114,7 +110,8 @@ class CommunityPublic
         return preg_replace($search, $replacement, $content);
     }
 
-    public static function cat_modify_submit() {
+    public static function cat_modify_submit()
+    {
         global $category, $conf, $conn;
 
         if (!isset($conf['community']['user_albums']) or !$conf['community']['user_albums']) {

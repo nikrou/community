@@ -1,31 +1,24 @@
 <?php
-// +-----------------------------------------------------------------------+
-// | Community - a plugin for Phyxo                                        |
-// | Copyright(C) 2015 Nicolas Roudaire             http://www.nikrou.net  |
-// +-----------------------------------------------------------------------+
-// | This program is free software; you can redistribute it and/or modify  |
-// | it under the terms of the GNU General Public License version 2 as     |
-// | published by the Free Software Foundation                             |
-// |                                                                       |
-// | This program is distributed in the hope that it will be useful, but   |
-// | WITHOUT ANY WARRANTY; without even the implied warranty of            |
-// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      |
-// | General Public License for more details.                              |
-// |                                                                       |
-// | You should have received a copy of the GNU General Public License     |
-// | along with this program; if not, write to the Free Software           |
-// | Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            |
-// | MA 02110-1301 USA.                                                    |
-// +-----------------------------------------------------------------------+
+/*
+ * This file is part of Community, a plugin for Phyxo package
+ *
+ * Copyright(c) Nicolas Roudaire  https://www.phyxo.net/
+ * Licensed under the GPL version 2.0 license.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 class wsCommunity
 {
-    public static function addMethods($arr) {
+    public static function addMethods($arr)
+    {
         self::switchUserToAdmin($arr);
         self::wsReplaceMethods($arr);
     }
 
-    private static function switchUserToAdmin($arr) {
+    private static function switchUserToAdmin($arr)
+    {
         global $user, $community, $services;
 
         $service = &$arr[0];
@@ -47,7 +40,7 @@ class wsCommunity
         // photos" link in the gallery menu
         $user_permissions = community_get_user_permissions($user['id']);
 
-        if (count($user_permissions['upload_categories']) == 0 and !$user_permissions ['create_whole_gallery']) {
+        if (count($user_permissions['upload_categories']) == 0 and !$user_permissions['create_whole_gallery']) {
             return;
         }
 
@@ -77,7 +70,8 @@ class wsCommunity
         return;
     }
 
-    private static function wsReplaceMethods($arr) {
+    private static function wsReplaceMethods($arr)
+    {
         global $conf, $user, $services;
 
         $service = &$arr[0];
@@ -98,26 +92,27 @@ class wsCommunity
 
         $service->addMethod(
             'pwg.categories.getList',
-            array(self, 'ws_categories_getList'),
+            'wsCommunity::ws_categories_getList',
             array(
-                'cat_id' =>       array('default' => 0),
-                'recursive' =>    array('default' => false),
-                'public' =>       array('default' => false),
-                'tree_output' =>  array('default' => false),
-                'fullname' =>     array('default' => false),
+                'cat_id' => array('default' => 0),
+                'recursive' => array('default' => false),
+                'public' => array('default' => false),
+                'tree_output' => array('default' => false),
+                'fullname' => array('default' => false),
             ),
             'retrieves a list of categories'
         );
 
         $service->addMethod(
             'pwg.tags.getAdminList',
-            array(self, 'ws_tags_getAdminList'),
+            'wsCommunit::ws_tags_getAdminList',
             array(),
             'administration method only'
         );
     }
 
-    public static function sendResponse($encodedResponse) {
+    public static function sendResponse($encodedResponse)
+    {
         global $community, $user, $conn;
 
         if (!isset($community['method'])) {
@@ -128,8 +123,8 @@ class wsCommunity
             $response = json_decode($encodedResponse);
             $image_id = $response->result->image_id;
         } elseif ('pwg.images.add' == $community['method']) {
-            $query = 'SELECT id FROM '.IMAGES_TABLE;
-            $query .= ' WHERE md5sum = \''.$community['md5sum'].'\'';
+            $query = 'SELECT id FROM ' . IMAGES_TABLE;
+            $query .= ' WHERE md5sum = \'' . $community['md5sum'] . '\'';
             $query .= ' ORDER BY id DESC LIMIT 1';
             list($image_id) = $conn->db_fetch_row($conn->db_query($query));
         } else {
@@ -151,15 +146,15 @@ class wsCommunity
         $moderate = true;
 
         $user_permissions = community_get_user_permissions($user['id']);
-        $query = 'SELECT cp.category_id,c.uppercats FROM '.COMMUNITY_PERMISSIONS_TABLE.' AS cp';
-        $query .= ' LEFT JOIN '.CATEGORIES_TABLE.' AS c ON category_id = c.id';
-        $query .= ' WHERE cp.id '.$conn->in($user_permissions['permission_ids']);
-        $query .= ' AND cp.moderated = \''.$conn->boolean_to_db(false).'\'';
+        $query = 'SELECT cp.category_id,c.uppercats FROM ' . COMMUNITY_PERMISSIONS_TABLE . ' AS cp';
+        $query .= ' LEFT JOIN ' . CATEGORIES_TABLE . ' AS c ON category_id = c.id';
+        $query .= ' WHERE cp.id ' . $conn->in($user_permissions['permission_ids']);
+        $query .= ' AND cp.moderated = \'' . $conn->boolean_to_db(false) . '\'';
         $result = $conn->db_query($query);
         while ($row = $conn->db_fetch_assoc($result)) {
             if (empty($row['category_id'])) {
                 $moderate = false;
-            } elseif (preg_match('/^'.$row['uppercats'].'(,|$)/', $category_infos['uppercats'])) {
+            } elseif (preg_match('/^' . $row['uppercats'] . '(,|$)/', $category_infos['uppercats'])) {
                 $moderate = false;
             }
         }
@@ -167,8 +162,8 @@ class wsCommunity
         if ($moderate) {
             $inserts = array();
 
-            $query = 'SELECT id,date_available FROM '.IMAGES_TABLE;
-            $query .= ' WHERE id '.$conn->in($image_ids);
+            $query = 'SELECT id,date_available FROM ' . IMAGES_TABLE;
+            $query .= ' WHERE id ' . $conn->in($image_ids);
             $result = $conn->db_query($query);
             while ($row = $conn->db_fetch_assoc($result)) {
                 $inserts[] = array(
@@ -191,15 +186,16 @@ class wsCommunity
             $level = 0;
         }
 
-        $query = 'UPDATE '.IMAGES_TABLE;
-        $query .= ' SET level = '.$conn->db_real_escape_string($level);
-        $query .= ' WHERE id '.$conn->in($image_ids);
+        $query = 'UPDATE ' . IMAGES_TABLE;
+        $query .= ' SET level = ' . $conn->db_real_escape_string($level);
+        $query .= ' WHERE id ' . $conn->in($image_ids);
         $conn->db_query($query);
 
         invalidate_user_cache();
     }
 
-    private static function ws_categories_getList($params, &$service) {
+    public static function ws_categories_getList($params, &$service)
+    {
         global $user, $conf, $conn;
 
         if ($params['tree_output']) {
@@ -220,18 +216,18 @@ class wsCommunity
         $join_user = $user['id'];
 
         if (!$params['recursive']) {
-            if ($params['cat_id']>0) {
-                $where[] = '(id_uppercat='.(int)($params['cat_id']).' OR id='.(int)($params['cat_id']).')';
+            if ($params['cat_id'] > 0) {
+                $where[] = '(id_uppercat=' . (int)($params['cat_id']) . ' OR id=' . (int)($params['cat_id']) . ')';
             } else {
                 $where[] = 'id_uppercat IS NULL';
             }
-        } elseif ($params['cat_id']>0) {
-            $where[] = 'uppercats '.DB_REGEX_OPERATOR.' \'(^|,)'.(int)($params['cat_id']).'(,|$)\'';
+        } elseif ($params['cat_id'] > 0) {
+            $where[] = 'uppercats ' . DB_REGEX_OPERATOR . ' \'(^|,)' . (int)($params['cat_id']) . '(,|$)\'';
         }
 
         if ($params['public']) {
             $where[] = 'status = \'public\'';
-            $where[] = 'visible = \''.$conn->boolean_to_db(true).'\'';
+            $where[] = 'visible = \'' . $conn->boolean_to_db(true) . '\'';
 
             $join_user = $conf['guest_id'];
         }
@@ -242,20 +238,20 @@ class wsCommunity
             $upload_categories = array(-1);
         }
 
-        $where[] = 'id '.$conn->in($upload_categories);
+        $where[] = 'id ' . $conn->in($upload_categories);
 
         $query = 'SELECT id,name,permalink,uppercats,global_rank,comment,nb_images,';
         $query .= 'count_images AS total_nb_images,date_last,max_date_last,count_categories AS nb_categories';
-        $query .= ' FROM '.CATEGORIES_TABLE;
-        $query .= ' LEFT JOIN '.USER_CACHE_CATEGORIES_TABLE.' ON id=cat_id AND user_id='.$join_user;
-        $query .= ' WHERE '. implode(' AND ', $where);
+        $query .= ' FROM ' . CATEGORIES_TABLE;
+        $query .= ' LEFT JOIN ' . USER_CACHE_CATEGORIES_TABLE . ' ON id=cat_id AND user_id=' . $join_user;
+        $query .= ' WHERE ' . implode(' AND ', $where);
 
         $result = $conn->db_query($query);
 
         $cats = array();
         while ($row = $conn->db_fetch_assoc($result)) {
             $row['url'] = make_index_url(array('category' => $row));
-            foreach(array('id','nb_images','total_nb_images','nb_categories') as $key) {
+            foreach (array('id', 'nb_images', 'total_nb_images', 'nb_categories') as $key) {
                 $row[$key] = (int)$row[$key];
             }
 
@@ -287,7 +283,7 @@ class wsCommunity
             return categories_flatlist_to_tree($cats);
         } else {
             return array(
-                'categories' => new PwgNamedArray(
+                'categories' => new \Phyxo\Ws\NamedArray(
                     $cats,
                     'category',
                     array(
@@ -304,7 +300,8 @@ class wsCommunity
         }
     }
 
-    private static function ws_tags_getAdminList($params, &$service) {
+    public static function ws_tags_getAdminList($params, &$service)
+    {
         global $services, $conn;
 
         $tags = $services['tags']->getAvailableTags();
@@ -317,8 +314,8 @@ class wsCommunity
                 $orphan_tag_ids[] = $tag['id'];
             }
 
-            $query = 'SELECT * FROM '.TAGS_TABLE;
-            $query .= ' WHERE id '.$conn->in($orphan_tag_ids);
+            $query = 'SELECT * FROM ' . TAGS_TABLE;
+            $query .= ' WHERE id ' . $conn->in($orphan_tag_ids);
             $result = $conn->db_query($query);
             while ($row = $conn->db_fetch_assoc($result)) {
                 $tags[] = $row;
@@ -328,7 +325,7 @@ class wsCommunity
         usort($tags, 'tag_alpha_compare');
 
         return array(
-            'tags' => new PwgNamedArray(
+            'tags' => new \Phyxo\Ws\NamedArray(
                 $tags,
                 'tag',
                 array(

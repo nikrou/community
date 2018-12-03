@@ -1,24 +1,13 @@
 <?php
-// +-----------------------------------------------------------------------+
-// | Community - a plugin for Phyxo                                        |
-// | Copyright(C) 2015 Nicolas Roudaire             http://www.nikrou.net  |
-// +-----------------------------------------------------------------------+
-// | Copyright(C) 2008-2015 Piwigo Team                  http://piwigo.org |
-// +-----------------------------------------------------------------------+
-// | This program is free software; you can redistribute it and/or modify  |
-// | it under the terms of the GNU General Public License version 2 as     |
-// | published by the Free Software Foundation                             |
-// |                                                                       |
-// | This program is distributed in the hope that it will be useful, but   |
-// | WITHOUT ANY WARRANTY; without even the implied warranty of            |
-// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      |
-// | General Public License for more details.                              |
-// |                                                                       |
-// | You should have received a copy of the GNU General Public License     |
-// | along with this program; if not, write to the Free Software           |
-// | Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            |
-// | MA 02110-1301 USA.                                                    |
-// +-----------------------------------------------------------------------+
+/*
+ * This file is part of Community, a plugin for Phyxo package
+ *
+ * Copyright(c) Nicolas Roudaire  https://www.phyxo.net/
+ * Licensed under the GPL version 2.0 license.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 if (!defined('PHPWG_ROOT_PATH')) {
     die('Hacking attempt!');
@@ -26,9 +15,9 @@ if (!defined('PHPWG_ROOT_PATH')) {
 
 global $template, $conf, $user, $conn, $services;
 
-include_once(PHPWG_ROOT_PATH.'admin/include/functions.php');
-include_once(PHPWG_ROOT_PATH.'admin/include/functions_upload.inc.php');
-include_once(COMMUNITY_PATH.'include/functions_community.inc.php');
+include_once(PHPWG_ROOT_PATH . 'admin/include/functions.php');
+include_once(PHPWG_ROOT_PATH . 'admin/include/functions_upload.inc.php');
+include_once(COMMUNITY_PATH . 'include/functions_community.inc.php');
 
 define('PHOTOS_ADD_BASE_URL', make_index_url(array('section' => 'add_photos')));
 
@@ -59,14 +48,14 @@ if (isset($_GET['processed']) && !empty($_POST['category'])) {
     }
 
     if ($hacking_attempt) {
-        if (isset($_SESSION['uploads'][ $_POST['upload_id'] ])) {
-            delete_elements($_SESSION['uploads'][ $_POST['upload_id'] ], true);
+        if (isset($_SESSION['uploads'][$_POST['upload_id']])) {
+            delete_elements($_SESSION['uploads'][$_POST['upload_id']], true);
         }
         exit();
     }
 }
 
-include_once(COMMUNITY_PATH.'include/photos_add_direct_process.inc.php');
+include_once(COMMUNITY_PATH . 'include/photos_add_direct_process.inc.php');
 
 // +-----------------------------------------------------------------------+
 // | limits                                                                |
@@ -80,8 +69,8 @@ $user['community_usage'] = community_get_user_limits($user['id']);
 // +-----------------------------------------------------------------------+
 
 if (isset($image_ids) and count($image_ids) > 0) {
-    $query = 'SELECT id,file,filesize FROM '.IMAGES_TABLE;
-    $query .= ' WHERE id '.$conn->in($image_ids);
+    $query = 'SELECT id,file,filesize FROM ' . IMAGES_TABLE;
+    $query .= ' WHERE id ' . $conn->in($image_ids);
     $query .= ' ORDER BY id DESC';
     $images = $conn->query2array($query);
 
@@ -91,7 +80,7 @@ if (isset($image_ids) and count($image_ids) > 0) {
     if ($user_permissions['storage'] > 0 and $user['community_usage']['storage'] > $user_permissions['storage']) {
         foreach ($images as $image) {
             $page['errors'][] = sprintf(l10n('Photo %s rejected.'), $image['file'])
-                .' '.sprintf(l10n('Disk usage quota reached (%uMB)'), $user_permissions['storage']);
+                . ' ' . sprintf(l10n('Disk usage quota reached (%uMB)'), $user_permissions['storage']);
 
             delete_elements(array($image['id']), true);
             foreach ($page['thumbnails'] as $tn_idx => $thumbnail) {
@@ -112,7 +101,7 @@ if (isset($image_ids) and count($image_ids) > 0) {
     if ($user_permissions['nb_photos'] > 0 and $user['community_usage']['nb_photos'] > $user_permissions['nb_photos']) {
         foreach ($images as $image) {
             $page['errors'][] = sprintf(l10n('Photo %s rejected.'), $image['file'])
-                .' '.sprintf(l10n('Maximum number of photos reached (%u)'), $user_permissions['nb_photos']);
+                . ' ' . sprintf(l10n('Maximum number of photos reached (%u)'), $user_permissions['nb_photos']);
 
             delete_elements(array($image['id']), true);
             foreach ($page['thumbnails'] as $tn_idx => $thumbnail) {
@@ -172,7 +161,7 @@ if (isset($image_ids) and count($image_ids) > 0) {
         $page['infos'][] = sprintf(
             l10n('%d photos uploaded into album "%s"'),
             count($page['thumbnails']),
-            '<em>'.$category_name.'</em>'
+            '<em>' . $category_name . '</em>'
         );
     }
 
@@ -187,15 +176,15 @@ if (isset($image_ids) and count($image_ids) > 0) {
     if ($services['users']->isAdmin()) {
         $moderate = false;
     } else {
-        $query = 'SELECT cp.category_id,c.uppercats FROM '.COMMUNITY_PERMISSIONS_TABLE.' AS cp';
-        $query .= ' LEFT JOIN '.CATEGORIES_TABLE.' AS c ON category_id = c.id';
-        $query .= ' WHERE cp.id '.$conn->in($user_permissions['permission_ids']);
-        $query .= ' AND cp.moderated = \''.$conn->boolean_to_db(false).'\'';
+        $query = 'SELECT cp.category_id,c.uppercats FROM ' . COMMUNITY_PERMISSIONS_TABLE . ' AS cp';
+        $query .= ' LEFT JOIN ' . CATEGORIES_TABLE . ' AS c ON category_id = c.id';
+        $query .= ' WHERE cp.id ' . $conn->in($user_permissions['permission_ids']);
+        $query .= ' AND cp.moderated = \'' . $conn->boolean_to_db(false) . '\'';
         $result = $conn->db_query($query);
         while ($row = $conn->db_fetch_assoc($result)) {
             if (empty($row['category_id'])) {
                 $moderate = false;
-            } elseif (preg_match('/^'.$row['uppercats'].'(,|$)/', $category_infos['uppercats'])) {
+            } elseif (preg_match('/^' . $row['uppercats'] . '(,|$)/', $category_infos['uppercats'])) {
                 $moderate = false;
             }
         }
@@ -204,8 +193,8 @@ if (isset($image_ids) and count($image_ids) > 0) {
     if ($moderate) {
         $inserts = array();
 
-        $query = 'SELECT id,date_available FROM '.IMAGES_TABLE;
-        $query .= ' WHERE id '.$conn->in($image_ids);
+        $query = 'SELECT id,date_available FROM ' . IMAGES_TABLE;
+        $query .= ' WHERE id ' . $conn->in($image_ids);
         $result = $conn->db_query($query);
         while ($row = $conn->db_fetch_assoc($result)) {
             $inserts[] = array(
@@ -225,8 +214,8 @@ if (isset($image_ids) and count($image_ids) > 0) {
             // find the url to the medium size
             $page['thumbnails'] = array();
 
-            $query = 'SELECT * FROM '.IMAGES_TABLE;
-            $query .= ' WHERE id '.$conn->in($image_ids);
+            $query = 'SELECT * FROM ' . IMAGES_TABLE;
+            $query .= ' WHERE id ' . $conn->in($image_ids);
             $result = $conn->db_query($query);
             while ($row = $conn->db_fetch_assoc($result)) {
                 $src_image = new SrcImage($row);
@@ -244,9 +233,9 @@ if (isset($image_ids) and count($image_ids) > 0) {
         }
     } else {
         // the level of a user upload photo with no moderation is 0
-        $query = 'UPDATE '.IMAGES_TABLE;
+        $query = 'UPDATE ' . IMAGES_TABLE;
         $query .= ' SET level = 0';
-        $query .= ' WHERE id '.$conn->in($image_ids);
+        $query .= ' WHERE id ' . $conn->in($image_ids);
         $conn->db_query($query);
 
         // the link on thumbnail must go to picture.php
@@ -267,7 +256,7 @@ if (isset($image_ids) and count($image_ids) > 0) {
 
     if (count($page['thumbnails'])) {
         // let's notify administrators
-        include_once(PHPWG_ROOT_PATH.'include/functions_mail.inc.php');
+        include_once(PHPWG_ROOT_PATH . 'include/functions_mail.inc.php');
 
         $keyargs_content = array(
             get_l10n_args('Hi administrators,', ''),
@@ -282,7 +271,7 @@ if (isset($image_ids) and count($image_ids) > 0) {
 
             $keyargs_content[] = get_l10n_args(
                 'Validation page: %s',
-                get_absolute_root_url().'admin.php?page=plugin-community-pendings'
+                get_absolute_root_url() . 'admin/index.php?page=plugin-community-pendings'
             );
         }
 
@@ -298,7 +287,7 @@ if (isset($image_ids) and count($image_ids) > 0) {
 // |                             prepare form                              |
 // +-----------------------------------------------------------------------+
 
-$template->set_filenames(array('add_photos' => __DIR__.'/tpl/add_photos.tpl'));
+$template->set_filenames(array('add_photos' => __DIR__ . '/tpl/add_photos.tpl'));
 
 // +-----------------------------------------------------------------------+
 // | Uploaded photos                                                       |
@@ -321,7 +310,7 @@ if (isset($page['thumbnails'])) {
     }
 }
 
-include_once(PHPWG_ROOT_PATH.'admin/include/photos_add_direct_prepare.inc.php');
+include_once(PHPWG_ROOT_PATH . 'admin/include/photos_add_direct_prepare.inc.php');
 
 if (isset($conf['upload_form_all_types']) and $conf['upload_form_all_types']) {
     $upload_file_types = $conf['file_ext'];
@@ -367,15 +356,15 @@ $upload_switch = $upload_modes[($upload_mode_index + 1) % 2];
 
 $template->assign(
     array(
-        'uploadify_path' => COMMUNITY_PATH.'uploadify',
+        'uploadify_path' => COMMUNITY_PATH . 'uploadify',
         'upload_file_types' => implode(', ', $unique_exts),
         'uploadify_fileTypeExts' => implode(';', prepend_append_array_items($uploadify_exts, '*.', '')),
         'upload_mode' => $upload_mode,
-        'form_action' => PHOTOS_ADD_BASE_URL.'&amp;upload_mode='.$upload_mode.'&amp;processed=1',
-        'switch_url' => PHOTOS_ADD_BASE_URL.'&amp;upload_mode='.$upload_switch,
+        'form_action' => PHOTOS_ADD_BASE_URL . '&amp;upload_mode=' . $upload_mode . '&amp;processed=1',
+        'switch_url' => PHOTOS_ADD_BASE_URL . '&amp;upload_mode=' . $upload_switch,
         'upload_id' => md5(rand()),
         'session_id' => session_id(),
-        'another_upload_link' => PHOTOS_ADD_BASE_URL.'&amp;upload_mode='.$upload_mode,
+        'another_upload_link' => PHOTOS_ADD_BASE_URL . '&amp;upload_mode=' . $upload_mode,
     )
 );
 
@@ -395,17 +384,17 @@ if ($user_permissions['storage'] > 0) {
             $user_permissions['storage']
         );
     } else {
-        $quota_available['summary'][] = $remaining_storage.'MB';
+        $quota_available['summary'][] = $remaining_storage . 'MB';
 
         $quota_available['details'][] = sprintf(
             l10n('%s out of %s'),
-            $remaining_storage.'MB',
+            $remaining_storage . 'MB',
             $user_permissions['storage']
         );
 
         $template->assign(
             array(
-                'limit_storage' => $remaining_storage*1024*1024,
+                'limit_storage' => $remaining_storage * 1024 * 1024,
                 'limit_storage_total_mb' => $user_permissions['storage'],
             )
         );
@@ -450,7 +439,7 @@ if (count($quota_available['details']) > 0) {
     );
 }
 
-$template->assign(array('setup_errors'=> $setup_errors));
+$template->assign(array('setup_errors' => $setup_errors));
 
 // we have to change the list of uploadable albums
 $upload_categories = $user_permissions['upload_categories'];
@@ -458,8 +447,8 @@ if (count($upload_categories) == 0) {
     $upload_categories = array(-1);
 }
 
-$query = 'SELECT id,name,uppercats,global_rank FROM '.CATEGORIES_TABLE;
-$query .= ' WHERE id '.$conn->in($upload_categories);
+$query = 'SELECT id,name,uppercats,global_rank FROM ' . CATEGORIES_TABLE;
+$query .= ' WHERE id ' . $conn->in($upload_categories);
 
 display_select_cat_wrapper(
     $query,
@@ -477,8 +466,8 @@ if (count($user_permissions['create_categories']) == 0) {
     $create_categories = array(-1);
 }
 
-$query = 'SELECT id,name,uppercats,global_rank FROM '.CATEGORIES_TABLE;
-$query .= ' WHERE id '.$conn->in($create_categories);
+$query = 'SELECT id,name,uppercats,global_rank FROM ' . CATEGORIES_TABLE;
+$query .= ' WHERE id ' . $conn->in($create_categories);
 
 display_select_cat_wrapper(
     $query,
@@ -520,4 +509,4 @@ $template->assign_var_from_handle('PLUGIN_INDEX_CONTENT_BEGIN', 'add_photos');
 
 $template->clear_assign(array('U_MODE_POSTED', 'U_MODE_CREATED'));
 
-$template->assign(array('TITLE' => '<a href="'.get_gallery_home_url().'">'.l10n('Home').'</a>'.$conf['level_separator'].$title));
+$template->assign(array('TITLE' => '<a href="' . get_gallery_home_url() . '">' . l10n('Home') . '</a>' . $conf['level_separator'] . $title));

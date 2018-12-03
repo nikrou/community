@@ -1,11 +1,13 @@
-{combine_script id='jquery.ui.slider' require='jquery.ui' load='footer' path='themes/default/js/ui/minified/jquery.ui.slider.min.js'}
+{combine_script id='jquery.ui.slider' require='jquery.ui' load='footer' path='themes/default/js/ui/jquery.ui.slider.js'}
 {combine_css path="themes/default/js/ui/theme/jquery.ui.slider.css"}
 
 {combine_script id='common' load='footer' path='admin/themes/default/js/common.js'}
 
 {literal}
 <style>
-form fieldset p {text-align:left;margin:0 0 1.5em 0;line-height:20px;}
+ #displayForm { margin-left: 1em; }
+ table.table2 { text-align: left; margin: 1em; }
+form fieldset p {text-align:left;margin:0 0 1.5em 1em;line-height:20px;}
 .permissionActions {text-align:center;height:20px}
 .permissionActions a:hover {border:none}
 .permissionActions img {margin-bottom:-2px}
@@ -166,7 +168,7 @@ $(document).ready(function() {
 </div>
 
 {if not isset($edit)}
-<a id="displayForm" href="#">{'Add a permission'|translate}</a>
+    <p><a class="icon-plus-circled" id="displayForm" href="#">{'Add a permission'|translate}</a></p>
 {/if}
 
 <form method="post" name="add_permission" action="{$F_ADD_ACTION}" class="properties" {if not isset($edit)}style="display:none"{/if}>
@@ -237,7 +239,7 @@ $(document).ready(function() {
   </fieldset>
 </form>
 
-<table class="table2" style="margin:15px auto;">
+<table class="table2">
   <tr class="throw">
     <th>{'Who?'|translate}</th>
     <th>{'Where?'|translate}</th>
@@ -259,11 +261,11 @@ $(document).ready(function() {
     {/if}
     </td>
     <td class="permissionActions">
-      <a href="{$permission.U_EDIT}">
-        <img src="{$ROOT_URL}{$themeconf.admin_icon_dir}/edit_s.png" alt="{'edit'|translate}" title="{'edit'|translate}" />
+	<a href="{$permission.U_EDIT}">
+	    <span class="icon-pencil"></span>&nbsp;{'edit'|translate}
       </a>
       <a href="{$permission.U_DELETE}" onclick="return confirm( document.getElementById('btn_delete').title + '\n\n' + '{'Are you sure?'|translate|@escape:'javascript'}');">
-        <img src="{$ROOT_URL}{$themeconf.admin_icon_dir}/delete.png" id="btn_delete" alt="{'delete'|translate}" title="{'Delete permission'|translate}" />
+          <span class="icon-trash"></span>&nbsp;{'delete'|translate}
       </a>
     </td>
   </tr>

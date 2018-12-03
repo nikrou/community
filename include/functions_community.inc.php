@@ -1,26 +1,16 @@
 <?php
-// +-----------------------------------------------------------------------+
-// | Community - a plugin for Phyxo                                        |
-// | Copyright(C) 2015 Nicolas Roudaire             http://www.nikrou.net  |
-// +-----------------------------------------------------------------------+
-// | Copyright(C) 2008-2015 Piwigo Team                  http://piwigo.org |
-// +-----------------------------------------------------------------------+
-// | This program is free software; you can redistribute it and/or modify  |
-// | it under the terms of the GNU General Public License version 2 as     |
-// | published by the Free Software Foundation                             |
-// |                                                                       |
-// | This program is distributed in the hope that it will be useful, but   |
-// | WITHOUT ANY WARRANTY; without even the implied warranty of            |
-// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      |
-// | General Public License for more details.                              |
-// |                                                                       |
-// | You should have received a copy of the GNU General Public License     |
-// | along with this program; if not, write to the Free Software           |
-// | Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            |
-// | MA 02110-1301 USA.                                                    |
-// +-----------------------------------------------------------------------+
+/*
+ * This file is part of Community, a plugin for Phyxo package
+ *
+ * Copyright(c) Nicolas Roudaire  https://www.phyxo.net/
+ * Licensed under the GPL version 2.0 license.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-function community_get_user_permissions($user_id) {
+function community_get_user_permissions($user_id)
+{
     global $conf, $user, $conn, $services;
 
     $cache_key = community_get_cache_key();
@@ -51,20 +41,20 @@ function community_get_user_permissions($user_id) {
     );
 
     // what are the user groups?
-    $query = 'SELECT group_id FROM '.USER_GROUP_TABLE;
-    $query .= ' WHERE user_id = '.$conn->db_real_escape_string($user_id);
+    $query = 'SELECT group_id FROM ' . USER_GROUP_TABLE;
+    $query .= ' WHERE user_id = ' . $conn->db_real_escape_string($user_id);
     $user_group_ids = $conn->query2array($query, null, 'group_id');
 
     $query = 'SELECT id,type,category_id,user_album,recursive,create_subcategories,';
-    $query .= 'nb_photos,storage FROM '.COMMUNITY_PERMISSIONS_TABLE;
+    $query .= 'nb_photos,storage FROM ' . COMMUNITY_PERMISSIONS_TABLE;
     $query .= ' WHERE (type = \'any_visitor\')';
 
     if ($user_id != $conf['guest_id']) {
         $query .= ' OR (type = \'any_registered_user\')';
-        $query .= ' OR (type = \'user\' AND user_id = '.$conn->db_real_escape_string($user_id).')';
+        $query .= ' OR (type = \'user\' AND user_id = ' . $conn->db_real_escape_string($user_id) . ')';
 
         if (count($user_group_ids) > 0) {
-            $query .= ' OR (type = \'group\' AND group_id '.$conn->in($user_group_ids).')';
+            $query .= ' OR (type = \'group\' AND group_id ' . $conn->in($user_group_ids) . ')';
         }
     }
 
@@ -74,21 +64,21 @@ function community_get_user_permissions($user_id) {
     while ($row = $conn->db_fetch_assoc($result)) {
         $return['permission_ids'][] = $row['id'];
 
-        if ($conn->get_boolean($row['user_album'])==false) {
+        if ($conn->get_boolean($row['user_album']) == false) {
             if (empty($row['category_id'])) {
                 $return['upload_whole_gallery'] = true;
             } else {
                 $return['upload_categories'][] = $row['category_id'];
 
-                if ($conn->get_boolean($row['recursive'])==true) {
+                if ($conn->get_boolean($row['recursive']) == true) {
                     $recursive_categories[] = $row['category_id'];
                 }
             }
         }
 
-        if ($conn->get_boolean($row['create_subcategories'])==true) {
+        if ($conn->get_boolean($row['create_subcategories']) == true) {
             if (empty($row['category_id'])) {
-                $return ['create_whole_gallery'] = true;
+                $return['create_whole_gallery'] = true;
             } else {
                 $return['create_categories'][] = $row['category_id'];
             }
@@ -118,8 +108,8 @@ function community_get_user_permissions($user_id) {
     }
 
     if ($services['users']->isAdmin()) {
-        $return ['upload_whole_gallery'] = true;
-        $return ['create_whole_gallery'] = true;
+        $return['upload_whole_gallery'] = true;
+        $return['create_whole_gallery'] = true;
         $return['nb_photos'] = -1;
         $return['storage'] = -1;
     }
@@ -135,17 +125,17 @@ function community_get_user_permissions($user_id) {
     );
 
     if (count($empty_categories) > 0) {
-        $query = 'SELECT category_id FROM '.IMAGE_CATEGORY_TABLE;
-        $query .= ' LEFT JOIN '.IMAGES_TABLE.' ON image_id = id';
-        $query .= ' WHERE category_id '.$conn->in($empty_categories);
-        $query .= ' AND level > '.$conn->db_real_escape_string($user['level']);
+        $query = 'SELECT category_id FROM ' . IMAGE_CATEGORY_TABLE;
+        $query .= ' LEFT JOIN ' . IMAGES_TABLE . ' ON image_id = id';
+        $query .= ' WHERE category_id ' . $conn->in($empty_categories);
+        $query .= ' AND level > ' . $conn->db_real_escape_string($user['level']);
         $query .= ' AND level <= 8';
         $query .= ' GROUP BY category_id';
         $not_really_empty_categories = array_keys($conn->query2array($query, 'category_id'));
-        $forbidden_categories.= ','.implode(',', $not_really_empty_categories);
+        $forbidden_categories .= ',' . implode(',', $not_really_empty_categories);
     }
 
-    $query = 'SELECT id FROM '.CATEGORIES_TABLE;
+    $query = 'SELECT id FROM ' . CATEGORIES_TABLE;
     $all_categories = array_keys($conn->query2array($query, 'id'));
 
     if ($return['upload_whole_gallery']) {
@@ -169,7 +159,7 @@ function community_get_user_permissions($user_id) {
         );
     }
 
-    if ($return ['create_whole_gallery']) {
+    if ($return['create_whole_gallery']) {
         $return['create_categories'] = array_diff(
             $all_categories,
             explode(',', $forbidden_categories)
@@ -211,13 +201,14 @@ function community_get_user_permissions($user_id) {
  * return the user album category_id. The album is automatically created if
  * it does not exist (or has been deleted)
  */
-function community_get_user_album($user_id) {
+function community_get_user_album($user_id)
+{
     global $conf, $conn, $services;
 
     $user_album_category_id = null;
 
-    $query = 'SELECT * FROM '.CATEGORIES_TABLE;
-    $query .= ' WHERE community_user = '.$conn->db_real_escape_string($user_id);
+    $query = 'SELECT * FROM ' . CATEGORIES_TABLE;
+    $query .= ' WHERE community_user = ' . $conn->db_real_escape_string($user_id);
     $result = $conn->db_query($query);
     while ($row = $conn->db_fetch_assoc($result)) {
         $user_album_category_id = $row['id'];
@@ -227,7 +218,7 @@ function community_get_user_album($user_id) {
     if (!isset($user_album_category_id)) {
         $user_infos = $services['users']->getUserData($user_id, false);
 
-        include_once(PHPWG_ROOT_PATH.'admin/include/functions.php');
+        include_once(PHPWG_ROOT_PATH . 'admin/include/functions.php');
         $category_info = create_virtual_category($user_infos['username'], $conf['community']['user_albums_parent']);
 
         $conn->single_update(
@@ -247,28 +238,30 @@ function community_get_user_album($user_id) {
     return $user_album_category_id;
 }
 
-function community_reject_pendings($image_ids) {
+function community_reject_pendings($image_ids)
+{
     global $conn;
 
     if (count($image_ids) == 0) {
         return;
     }
 
-    $query = 'DELETE FROM '.COMMUNITY_PENDINGS_TABLE;
-    $query .= ' WHERE image_id '.$conn->in($image_ids);
+    $query = 'DELETE FROM ' . COMMUNITY_PENDINGS_TABLE;
+    $query .= ' WHERE image_id ' . $conn->in($image_ids);
     $conn->db_query($query);
 
     // needs to be in administration panel
     delete_elements($image_ids, true);
 }
 
-function community_reject_user_pendings($user_id) {
+function community_reject_user_pendings($user_id)
+{
     global $conn;
 
-    $query = 'SELECT image_id FROM '.COMMUNITY_PENDINGS_TABLE.' AS cp';
-    $query .= ' LEFT JOIN '.IMAGES_TABLE.' AS i ON i.id = cp.image_id';
+    $query = 'SELECT image_id FROM ' . COMMUNITY_PENDINGS_TABLE . ' AS cp';
+    $query .= ' LEFT JOIN ' . IMAGES_TABLE . ' AS i ON i.id = cp.image_id';
     $query .= ' WHERE state != \'validated\'';
-    $query .= ' AND added_by = '.$conn->db_real_escape_string($user_id);
+    $query .= ' AND added_by = ' . $conn->db_real_escape_string($user_id);
     $result = $conn->db_query($query);
     $image_ids = array();
     while ($row = $conn->db_fetch_assoc($result)) {
@@ -278,13 +271,15 @@ function community_reject_user_pendings($user_id) {
     community_reject_pendings($image_ids);
 }
 
-function community_update_cache_key() {
+function community_update_cache_key()
+{
     $cache_key = generate_key(20);
     conf_update_param('community_cache_key', $cache_key);
     return $cache_key;
 }
 
-function community_get_cache_key() {
+function community_get_cache_key()
+{
     global $conf;
 
     if (isset($conf['community_cache_key'])) {
@@ -294,13 +289,14 @@ function community_get_cache_key() {
     }
 }
 
-function community_get_user_limits($user_id) {
+function community_get_user_limits($user_id)
+{
     global $conn;
 
     // how many photos and storage for this user?
     $query = 'SELECT COUNT(id) AS nb_photos, FLOOR(SUM(filesize)/1024) AS storage';
-    $query .= ' FROM '.IMAGES_TABLE;
-    $query .= ' WHERE added_by = '.$conn->db_real_escape_string($user_id);
+    $query .= ' FROM ' . IMAGES_TABLE;
+    $query .= ' WHERE added_by = ' . $conn->db_real_escape_string($user_id);
     $row = $conn->db_fetch_assoc($conn->db_query($query));
     if (empty($row['storage'])) {
         $row['storage'] = 0;

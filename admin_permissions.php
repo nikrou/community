@@ -1,33 +1,22 @@
 <?php
-// +-----------------------------------------------------------------------+
-// | Community - a plugin for Phyxo                                        |
-// | Copyright(C) 2015 Nicolas Roudaire             http://www.nikrou.net  |
-// +-----------------------------------------------------------------------+
-// | Copyright(C) 2008-2015 Piwigo Team                  http://piwigo.org |
-// +-----------------------------------------------------------------------+
-// | This program is free software; you can redistribute it and/or modify  |
-// | it under the terms of the GNU General Public License version 2 as     |
-// | published by the Free Software Foundation                             |
-// |                                                                       |
-// | This program is distributed in the hope that it will be useful, but   |
-// | WITHOUT ANY WARRANTY; without even the implied warranty of            |
-// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      |
-// | General Public License for more details.                              |
-// |                                                                       |
-// | You should have received a copy of the GNU General Public License     |
-// | along with this program; if not, write to the Free Software           |
-// | Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            |
-// | MA 02110-1301 USA.                                                    |
-// +-----------------------------------------------------------------------+
+/*
+ * This file is part of Community, a plugin for Phyxo package
+ *
+ * Copyright(c) Nicolas Roudaire  https://www.phyxo.net/
+ * Licensed under the GPL version 2.0 license.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 if (!defined('PHPWG_ROOT_PATH')) {
     die('Hacking attempt!');
 }
 
-include_once(PHPWG_ROOT_PATH.'admin/include/functions.php');
+include_once(PHPWG_ROOT_PATH . 'admin/include/functions.php');
 load_language('plugin.lang', COMMUNITY_PATH);
 
-$admin_base_url = get_root_url().'admin.php?page=plugin-community-permissions';
+$admin_base_url = get_root_url() . 'admin/index.php?page=plugin-community-permissions';
 
 $who_options = array(
     'any_visitor' => l10n('any visitor'),
@@ -90,8 +79,8 @@ if (isset($_POST['submit_add'])) {
         'user_id' => ('user' == $_POST['who']) ? $_POST['who_user'] : null,
         'category_id' => ($_POST['category'] > 0) ? $_POST['category'] : null,
         'user_album' => $conn->boolean_to_db(-1 == $_POST['category']),
-        'recursive' => isset($_POST['recursive']) ? $conn->boolean_to_db(true):$conn->boolean_to_db(false),
-        'create_subcategories' => isset($_POST['create_subcategories']) ? $conn->boolean_to_db(true):$conn->boolean_to_db(false),
+        'recursive' => isset($_POST['recursive']) ? $conn->boolean_to_db(true) : $conn->boolean_to_db(false),
+        'create_subcategories' => isset($_POST['create_subcategories']) ? $conn->boolean_to_db(true) : $conn->boolean_to_db(false),
         'moderated' => $conn->boolean_to_db($conn->get_boolean($_POST['moderated'])),
         'nb_photos' => $_POST['nb_photos'],
         'storage' => $_POST['storage'],
@@ -100,12 +89,12 @@ if (isset($_POST['submit_add'])) {
     // does this permission already exist?
     //
     // a permission is identified by a who+where
-    $query = 'SELECT id FROM '.COMMUNITY_PERMISSIONS_TABLE;
-    $query .= ' WHERE type = \''.$conn->db_real_escape_string($insert['type']).'\'';
-    $query .= ' AND user_id '.(isset($insert['user_id']) ? '= '.$conn->db_real_escape_string($insert['user_id']) : 'is null');
-    $query .= ' AND group_id '.(isset($insert['group_id']) ? '= '.$conn->db_real_escape_string($insert['group_id']) : 'is null');
-    $query .= ' AND category_id '.(isset($insert['category_id']) ? '= '.$conn->db_real_escape_string($insert['category_id']) : 'is null');
-    $query .= ' AND user_album = \''.$conn->db_real_escape_string($insert['user_album']).'\'';
+    $query = 'SELECT id FROM ' . COMMUNITY_PERMISSIONS_TABLE;
+    $query .= ' WHERE type = \'' . $conn->db_real_escape_string($insert['type']) . '\'';
+    $query .= ' AND user_id ' . (isset($insert['user_id']) ? '= ' . $conn->db_real_escape_string($insert['user_id']) : 'is null');
+    $query .= ' AND group_id ' . (isset($insert['group_id']) ? '= ' . $conn->db_real_escape_string($insert['group_id']) : 'is null');
+    $query .= ' AND category_id ' . (isset($insert['category_id']) ? '= ' . $conn->db_real_escape_string($insert['category_id']) : 'is null');
+    $query .= ' AND user_album = \'' . $conn->db_real_escape_string($insert['user_album']) . '\'';
     $result = $conn->db_query($query);
     $row = $conn->db_fetch_assoc($result);
     if (isset($row['id'])) {
@@ -114,8 +103,8 @@ if (isset($_POST['submit_add'])) {
 
             if ($_POST['edit'] != $row['id']) {
                 // we have to delete the edited permission
-                $query = 'DELETE FROM '.COMMUNITY_PERMISSIONS_TABLE;
-                $query .= ' WHERE id = '.$conn->db_real_escape_string($_POST['edit']);
+                $query = 'DELETE FROM ' . COMMUNITY_PERMISSIONS_TABLE;
+                $query .= ' WHERE id = ' . $conn->db_real_escape_string($_POST['edit']);
                 $conn->db_query($query);
             }
         }
@@ -162,8 +151,8 @@ if (isset($_POST['submit_add'])) {
 if (isset($_GET['delete'])) {
     check_input_parameter('delete', $_GET, false, PATTERN_ID);
 
-    $query = 'DELETE FROM '.COMMUNITY_PERMISSIONS_TABLE;
-    $query .= ' WHERE id = '.$conn->db_real_escape_string($_GET['delete']);
+    $query = 'DELETE FROM ' . COMMUNITY_PERMISSIONS_TABLE;
+    $query .= ' WHERE id = ' . $conn->db_real_escape_string($_GET['delete']);
     $conn->db_query($query);
 
     community_update_cache_key();
@@ -176,7 +165,7 @@ if (isset($_GET['delete'])) {
 // | template init                                                         |
 // +-----------------------------------------------------------------------+
 
-$template->set_filenames(array('plugin_admin_content' => __DIR__.'/tpl/admin_permissions.tpl'));
+$template->set_filenames(array('plugin_admin_content' => __DIR__ . '/tpl/admin_permissions.tpl'));
 
 // +-----------------------------------------------------------------------+
 // | prepare form                                                          |
@@ -186,8 +175,8 @@ $template->set_filenames(array('plugin_admin_content' => __DIR__.'/tpl/admin_per
 if (isset($_GET['edit'])) {
     check_input_parameter('edit', $_GET, false, PATTERN_ID);
 
-    $query = 'SELECT * FROM '.COMMUNITY_PERMISSIONS_TABLE;
-    $query .= ' WHERE id = '.$conn->db_real_escape_string($_GET['edit']);
+    $query = 'SELECT * FROM ' . COMMUNITY_PERMISSIONS_TABLE;
+    $query .= ' WHERE id = ' . $conn->db_real_escape_string($_GET['edit']);
     $result = $conn->db_query($query);
     $row = $conn->db_fetch_assoc($result);
 
@@ -228,10 +217,10 @@ $template->assign(array('who_options' => $who_options));
 // list of users
 $users = array();
 
-$query = 'SELECT '.$conf['user_fields']['id'].' AS id,'.$conf['user_fields']['username'].' AS username';
-$query .= ' FROM '.USERS_TABLE.' AS u';
-$query .= ' LEFT JOIN '.USER_INFOS_TABLE.' AS uf ON uf.user_id = u.'.$conf['user_fields']['id'];
-$query .= ' WHERE uf.status '.$conn->in(array('normal', 'generic'));
+$query = 'SELECT ' . $conf['user_fields']['id'] . ' AS id,' . $conf['user_fields']['username'] . ' AS username';
+$query .= ' FROM ' . USERS_TABLE . ' AS u';
+$query .= ' LEFT JOIN ' . USER_INFOS_TABLE . ' AS uf ON uf.user_id = u.' . $conf['user_fields']['id'];
+$query .= ' WHERE uf.status ' . $conn->in(array('normal', 'generic'));
 $result = $conn->db_query($query);
 while ($row = $conn->db_fetch_assoc($result)) {
     $users[$row['id']] = $row['username'];
@@ -244,7 +233,7 @@ $template->assign(array('user_options' => $users));
 // list of groups
 $groups = array();
 
-$query = 'SELECT id,name FROM '.GROUPS_TABLE;
+$query = 'SELECT id,name FROM ' . GROUPS_TABLE;
 $result = $conn->db_query($query);
 while ($row = $conn->db_fetch_assoc($result)) {
     $groups[$row['id']] = $row['name'];
@@ -256,13 +245,13 @@ $template->assign(array('group_options' => $groups));
 
 $template->assign(
     array(
-        'F_ADD_ACTION' => COMMUNITY_BASE_URL.'-'.$page['tab'],
+        'F_ADD_ACTION' => COMMUNITY_BASE_URL . '-' . $page['tab'],
         'community_conf' => $conf['community'],
     )
 );
 
 // list of albums
-$query = 'SELECT id,name,uppercats,global_rank FROM '.CATEGORIES_TABLE;
+$query = 'SELECT id,name,uppercats,global_rank FROM ' . CATEGORIES_TABLE;
 display_select_cat_wrapper(
     $query,
     isset($category_options_selected) ? $category_options_selected : array(),
@@ -274,7 +263,7 @@ display_select_cat_wrapper(
 // +-----------------------------------------------------------------------+
 
 // user with community permissions
-$query = 'SELECT * FROM '.COMMUNITY_PERMISSIONS_TABLE.' ORDER BY id DESC';
+$query = 'SELECT * FROM ' . COMMUNITY_PERMISSIONS_TABLE . ' ORDER BY id DESC';
 $result = $conn->db_query($query);
 
 $permissions = array();
@@ -299,31 +288,31 @@ while ($row = $conn->db_fetch_assoc($result)) {
 }
 
 if (!empty($user_ids)) {
-    $query = 'SELECT '.$conf['user_fields']['id'].' AS id,'.$conf['user_fields']['username'].' AS username';
-    $query .= ' FROM '.USERS_TABLE;
-    $query .= ' WHERE '.$conf['user_fields']['id'].' '.$conn->in($user_ids);
+    $query = 'SELECT ' . $conf['user_fields']['id'] . ' AS id,' . $conf['user_fields']['username'] . ' AS username';
+    $query .= ' FROM ' . USERS_TABLE;
+    $query .= ' WHERE ' . $conf['user_fields']['id'] . ' ' . $conn->in($user_ids);
     $result = $conn->db_query($query);
     while ($row = $conn->db_fetch_assoc($result)) {
-        $name_of_user[ $row['id'] ] = $row['username'];
+        $name_of_user[$row['id']] = $row['username'];
     }
 }
 
 if (!empty($group_ids)) {
-    $query = 'SELECT id,name FROM '.GROUPS_TABLE;
-    $query .= ' WHERE id '.$conn->in($group_ids);
+    $query = 'SELECT id,name FROM ' . GROUPS_TABLE;
+    $query .= ' WHERE id ' . $conn->in($group_ids);
     $result = $conn->db_query($query);
     while ($row = $conn->db_fetch_assoc($result)) {
-        $name_of_group[ $row['id'] ] = $row['name'];
+        $name_of_group[$row['id']] = $row['name'];
     }
 }
 
 if (!empty($category_ids)) {
-    $query = 'SELECT id,uppercats FROM '.CATEGORIES_TABLE;
-    $query .= ' WHERE id '.$conn->in($category_ids);
+    $query = 'SELECT id,uppercats FROM ' . CATEGORIES_TABLE;
+    $query .= ' WHERE id ' . $conn->in($category_ids);
     $result = $conn->db_query($query);
 
     while ($row = $conn->db_fetch_assoc($result)) {
-        $name_of_category[ $row['id'] ] = get_cat_display_name_cache(
+        $name_of_category[$row['id']] = get_cat_display_name_cache(
             $row['uppercats'],
             null,
             false
@@ -336,7 +325,7 @@ foreach ($permissions as $permission) {
     if (!$conn->get_boolean($permission['user_album'])) {
         $where = l10n('The whole gallery');
         if (isset($permission['category_id'])) {
-            $where = $name_of_category[ $permission['category_id'] ];
+            $where = $name_of_category[$permission['category_id']];
         }
     }
 
@@ -404,8 +393,8 @@ foreach ($permissions as $permission) {
             'STORAGE' => $storage,
             'STORAGE_TOOLTIP' => $storage_tooltip,
             'CREATE_SUBCATEGORIES' => $conn->get_boolean($permission['create_subcategories']),
-            'U_DELETE' => $admin_base_url.'&amp;delete='.$permission['id'],
-            'U_EDIT' => $admin_base_url.'&amp;edit='.$permission['id'],
+            'U_DELETE' => $admin_base_url . '&amp;delete=' . $permission['id'],
+            'U_EDIT' => $admin_base_url . '&amp;edit=' . $permission['id'],
             'HIGHLIGHT' => $highlight,
         )
     );

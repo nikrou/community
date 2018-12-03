@@ -1,12 +1,12 @@
 {if $upload_mode eq 'multiple'}
-{combine_script id='jquery.jgrowl' load='footer' require='jquery' path='themes/default/js/plugins/jquery.jgrowl_minimized.js' }
+{combine_script id='jquery.jgrowl' load='footer' require='jquery' path='themes/default/js/plugins/jquery.jgrowl.js' }
 {combine_script id='jquery.uploadify' load='footer' require='jquery' path='plugins/community/uploadify/jquery.uploadify.v3.0.0.min.js' }
 {combine_script id='jquery.ui.progressbar' load='footer'}
 {combine_css path="themes/default/js/plugins/jquery.jgrowl.css"}
 {combine_css path="plugins/community/uploadify/uploadify.css"}
 {/if}
 
-{combine_script id='jquery.colorbox' load='footer' require='jquery' path='themes/default/js/plugins/jquery.colorbox.min.js'}
+{combine_script id='jquery.colorbox' load='footer' require='jquery' path='themes/default/js/plugins/jquery.colorbox.js'}
 {combine_css path="themes/default/js/plugins/colorbox/style2/colorbox.css"}
 
 {footer_script}{literal}

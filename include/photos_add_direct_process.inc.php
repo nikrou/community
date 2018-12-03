@@ -1,24 +1,13 @@
 <?php
-// +-----------------------------------------------------------------------+
-// | Community - a plugin for Phyxo                                        |
-// | Copyright(C) 2015 Nicolas Roudaire             http://www.nikrou.net  |
-// +-----------------------------------------------------------------------+
-// | Copyright(C) 2008-2015 Piwigo Team                  http://piwigo.org |
-// +-----------------------------------------------------------------------+
-// | This program is free software; you can redistribute it and/or modify  |
-// | it under the terms of the GNU General Public License version 2 as     |
-// | published by the Free Software Foundation                             |
-// |                                                                       |
-// | This program is distributed in the hope that it will be useful, but   |
-// | WITHOUT ANY WARRANTY; without even the implied warranty of            |
-// | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      |
-// | General Public License for more details.                              |
-// |                                                                       |
-// | You should have received a copy of the GNU General Public License     |
-// | along with this program; if not, write to the Free Software           |
-// | Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,            |
-// | MA 02110-1301 USA.                                                    |
-// +-----------------------------------------------------------------------+
+/*
+ * This file is part of Community, a plugin for Phyxo package
+ *
+ * Copyright(c) Nicolas Roudaire  https://www.phyxo.net/
+ * Licensed under the GPL version 2.0 license.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 if (isset($_GET['processed'])) {
     // sometimes, you have submitted the form but you have nothing in $_POST
@@ -50,18 +39,18 @@ if (isset($_GET['processed'])) {
 
                 $extension = pathinfo($_FILES['image_upload']['name'][$idx], PATHINFO_EXTENSION);
                 if ('zip' == strtolower($extension)) {
-                    $upload_dir = $conf['upload_dir'].'/buffer';
+                    $upload_dir = $conf['upload_dir'] . '/buffer';
                     prepare_directory($upload_dir);
 
-                    $temporary_archive_name = date('YmdHis').'-'.generate_key(10);
-                    $archive_path = $upload_dir.'/'.$temporary_archive_name.'.zip';
+                    $temporary_archive_name = date('YmdHis') . '-' . generate_key(10);
+                    $archive_path = $upload_dir . '/' . $temporary_archive_name . '.zip';
 
                     move_uploaded_file(
                         $_FILES['image_upload']['tmp_name'][$idx],
                         $archive_path
                     );
 
-                    define('PCLZIP_TEMPORARY_DIR', $upload_dir.'/');
+                    define('PCLZIP_TEMPORARY_DIR', $upload_dir . '/');
                     $zip = new PclZip($archive_path);
                     if ($list = $zip->listContent()) {
                         $indexes_to_extract = array();
@@ -75,7 +64,7 @@ if (isset($_GET['processed'])) {
                                 $indexes_to_extract[] = $node['index'];
 
                                 $images_to_add[] = array(
-                                    'source_filepath' => $upload_dir.'/'.$temporary_archive_name.'/'.$node['filename'],
+                                    'source_filepath' => $upload_dir . '/' . $temporary_archive_name . '/' . $node['filename'],
                                     'original_filename' => basename($node['filename']),
                                 );
                             }
@@ -83,8 +72,10 @@ if (isset($_GET['processed'])) {
 
                         if (count($indexes_to_extract) > 0) {
                             $zip->extract(
-                                PCLZIP_OPT_PATH, $upload_dir.'/'.$temporary_archive_name,
-                                PCLZIP_OPT_BY_INDEX, $indexes_to_extract,
+                                PCLZIP_OPT_PATH,
+                                $upload_dir . '/' . $temporary_archive_name,
+                                PCLZIP_OPT_BY_INDEX,
+                                $indexes_to_extract,
                                 PCLZIP_OPT_ADD_TEMP_FILE_ON
                             );
                         }
@@ -125,7 +116,7 @@ if (isset($_GET['processed'])) {
 
     if (isset($_POST['upload_id'])) {
         // we're on a multiple upload, with uploadify and so on
-        if (isset($_SESSION['uploads_error'][ $_POST['upload_id'] ])) {
+        if (isset($_SESSION['uploads_error'][$_POST['upload_id']])) {
             foreach ($_SESSION['uploads_error'][$_POST['upload_id']] as $error) {
                 $page['errors'][] = $error;
             }
@@ -143,8 +134,8 @@ if (isset($_GET['processed'])) {
         // compared to the upload process.
         $thumbnail = array();
 
-        $query = 'SELECT id,file,path FROM '.IMAGES_TABLE;
-        $query .= ' WHERE id = '.$conn->db_real_escape_string($image_id);
+        $query = 'SELECT id,file,path FROM ' . IMAGES_TABLE;
+        $query .= ' WHERE id = ' . $conn->db_real_escape_string($image_id);
         $image_infos = $conn->db_fetch_assoc($conn->db_query($query));
 
         $thumbnail['file'] = $image_infos['file'];
@@ -161,7 +152,7 @@ if (isset($_GET['processed'])) {
         // function get_image_name($name, $file) would be better
         $thumbnail['title'] = get_name_from_file($image_infos['file']);
 
-        $thumbnail['link'] = get_root_url().'admin.php?page=photo-'.$image_id.'&amp;cat_id='.$category_id;
+        $thumbnail['link'] = get_root_url() . 'admin.php?page=photo-' . $image_id . '&amp;cat_id=' . $category_id;
 
         $page['thumbnails'][] = $thumbnail;
     }
@@ -176,18 +167,18 @@ if (isset($_GET['processed'])) {
             );
         }
 
-        $query = 'SELECT COUNT(1) FROM '.IMAGE_CATEGORY_TABLE;
-        $query .= ' WHERE category_id = '.$conn->db_real_escape_string($category_id);
+        $query = 'SELECT COUNT(1) FROM ' . IMAGE_CATEGORY_TABLE;
+        $query .= ' WHERE category_id = ' . $conn->db_real_escape_string($category_id);
         list($count) = $conn->db_fetch_row($conn->db_query($query));
         $category_name = get_cat_display_name_from_id($category_id, 'admin.php?page=album-');
 
         // information
         $page['infos'][] = l10n(
             'Album "%s" now contains %d photos',
-            '<em>'.$category_name.'</em>',
+            '<em>' . $category_name . '</em>',
             $count
         );
 
-        $page['batch_link'] = PHOTOS_ADD_BASE_URL.'&batch='.implode(',', $image_ids);
+        $page['batch_link'] = PHOTOS_ADD_BASE_URL . '&batch=' . implode(',', $image_ids);
     }
 }
