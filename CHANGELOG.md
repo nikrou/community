@@ -1,3 +1,7 @@
+Community 0.3.1 - 2018-12-04
+============================
+* Forgot line of debug.
+
 Community 0.3.0 - 2018-12-03
 ============================
 * Make plugin compatible with Phyxo 1.6.5

@@ -133,7 +133,6 @@ class community_maintain extends \Phyxo\Plugin\PluginMaintain
 
     public function update($old_version, $new_version, &$errors = array())
     {
-        \App\Log::getInstance()->debug("try to update from $old_version to $new_version");
         $this->install($new_version, $errors);
     }
 
