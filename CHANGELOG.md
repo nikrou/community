@@ -1,3 +1,7 @@
+Community 0.3.2 - 2018-12-04
+============================
+* Improve installation
+
 Community 0.3.1 - 2018-12-04
 ============================
 * Forgot line of debug.

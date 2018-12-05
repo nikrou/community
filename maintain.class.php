@@ -9,10 +9,6 @@
  * file that was distributed with this source code.
  */
 
-if (!defined('PHPWG_ROOT_PATH')) {
-    die('Hacking attempt!');
-}
-
 class community_maintain extends \Phyxo\Plugin\PluginMaintain
 {
     private $installed = false;
@@ -20,6 +16,12 @@ class community_maintain extends \Phyxo\Plugin\PluginMaintain
     public function __construct($plugin_id)
     {
         parent::__construct($plugin_id);
+    }
+
+    public static function isInstalled() {
+        global $conf;
+
+        return isset($conf['community']);
     }
 
     public function install($plugin_version, &$errors = array())
@@ -54,8 +56,16 @@ class community_maintain extends \Phyxo\Plugin\PluginMaintain
     {
         global $prefixeTable, $conn;
 
-        $query = 'ALTER TABLE `' . $prefixeTable . 'categories` ADD `community_user` mediumint unsigned DEFAULT NULL;';
-        $conn->db_query($query);
+        $query = 'SELECT count(1) FROM information_schema.columns';
+        $query .= ' WHERE table_name = \''.$prefixeTable .'categories\'';
+        $query .= ' AND column_name = \'community_user\'';
+        $result = $conn->db_query($query);
+        list($count) = $this->conn->db_fetch_row($result);
+
+        if ($count !== 0) {
+            $query = 'ALTER TABLE `' . $prefixeTable . 'categories` ADD `community_user` mediumint unsigned DEFAULT NULL;';
+            $conn->db_query($query);
+        }
 
         $current_enums = $conn->get_enums($prefixeTable . 'history', 'section');
         $current_enums[] = 'add_photos';
@@ -74,7 +84,7 @@ class community_maintain extends \Phyxo\Plugin\PluginMaintain
     {
         global $conn, $prefixeTable;
 
-        $query = 'ALTER TABLE "' . $prefixeTable . 'categories" ADD "community_user" INTEGER DEFAULT NULL;';
+        $query = 'ALTER TABLE "' . $prefixeTable . 'categories" ADD COLUMN IF NOT EXISTS "community_user" INTEGER DEFAULT NULL;';
         $conn->db_query($query);
 
         $query = 'ALTER TYPE history_section ADD VALUE IF NOT EXISTS \'add_photos\'';

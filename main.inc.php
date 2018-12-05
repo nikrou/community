@@ -11,7 +11,7 @@
 
 /*
   Plugin Name: Community
-  Version: 0.3.1
+  Version: 0.3.2
   Description: Non admin users can add photos
   Plugin URI: http://ext.phyxo.net/extension_view.php?eid=NNN
   Author: Nicolas
@@ -35,6 +35,12 @@ define('COMMUNITY_PENDINGS_TABLE', $prefixeTable . 'community_pendings');
 
 include_once(COMMUNITY_PATH . 'include/autoload.inc.php');
 include_once(COMMUNITY_PATH . 'include/functions_community.inc.php');
+
+// check if plugin is installed
+if (!community_maintain::isInstalled()) {
+    $plugin_maintain = new community_maintain(COMMUNITY_ID);
+    $plugin_maintain->activate("0.3.2");
+}
 
 // init the plugin
 add_event_handler('init', array('Community', 'init'));

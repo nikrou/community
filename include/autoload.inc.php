@@ -14,6 +14,7 @@ if (!defined('PHPWG_ROOT_PATH')) {
 }
 
 global $__autoload;
+$__autoload['community_maintain'] = __DIR__ . '/../maintain.class.php';
 $__autoload['Community'] = __DIR__ . '/class.community.php';
 $__autoload['CommunityAdmin'] = __DIR__ . '/class.community.admin.php';
 $__autoload['CommunityPublic'] = __DIR__ . '/class.community.public.php';
