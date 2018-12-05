@@ -84,7 +84,8 @@ class community_maintain extends \Phyxo\Plugin\PluginMaintain
     {
         global $conn, $prefixeTable;
 
-        $query = 'ALTER TABLE "' . $prefixeTable . 'categories" ADD COLUMN IF NOT EXISTS "community_user" INTEGER DEFAULT NULL;';
+        $query = 'ALTER TABLE "' . $prefixeTable . 'categories" DROP COLUMN IF EXISTS "community_user";';
+        $query .= 'ALTER TABLE "' . $prefixeTable . 'categories" ADD COLUMN "community_user" INTEGER DEFAULT NULL';
         $conn->db_query($query);
 
         $query = 'ALTER TYPE history_section ADD VALUE IF NOT EXISTS \'add_photos\'';

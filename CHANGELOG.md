@@ -1,3 +1,7 @@
+Community 0.3.3 - 2018-12-05
+============================
+* PostgreSQL older than 9.5 does understand "ALTER TABLE ADD COLUMN IF NOT EXISTS" syntax.
+
 Community 0.3.2 - 2018-12-04
 ============================
 * Improve installation
